@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserPasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\View\View;
@@ -43,32 +44,20 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $validated = $request->validated();
+        $user->update($request->validated() + [
+                'is_active' => $request->has('is_active')
+            ]);
 
-        if (auth()->user()->isManager() && !auth()->user()->isAdmin()) {
-            if (!empty($validated['password'])) {
-                $user->update([
-                    'password' => Hash::make($validated['password'])
-                ]);
-                return redirect()->route('users.index')->with('status', 'Hasło pracownika zostało zmienione.');
-            }
-            return back()->withErrors(['error' => 'Jako Manager możesz zmieniać tylko hasła pracowników.']);
-        }
+        return back()->with('status', 'user-updated');
+    }
 
-        $user->fill([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'role' => $validated['role'],
-            'is_active' => $request->has('is_active'),
+    public function updatePassword(UpdateUserPasswordRequest $request, User $user): RedirectResponse
+    {
+        $user->update([
+            'password' => Hash::make($request->password)
         ]);
 
-        if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
-        }
-
-        $user->save();
-
-        return redirect()->route('users.index')->with('status', 'Dane użytkownika zostały zaktualizowane.');
+        return back()->with('status', 'password-updated');
     }
 
     public function destroy(User $user): RedirectResponse

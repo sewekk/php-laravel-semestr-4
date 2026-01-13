@@ -7,6 +7,18 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    @can('add-work-time')
+                        <x-nav-link :href="route('work-times.index')" :active="request()->routeIs('work-times.index')">
+                            {{ __('Mój czas pracy') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('view-all-work-times')
+                        <x-nav-link :href="route('work-times.manage')" :active="request()->routeIs('work-times.manage')">
+                            {{ __('Zarządzanie czasem') }}
+                        </x-nav-link>
+                    @endcan
+
                     @can('create-leave-request')
                         <x-nav-link :href="route('leave-requests.index')" :active="request()->routeIs('leave-requests.index')">
                             {{ __('Moje wnioski') }}

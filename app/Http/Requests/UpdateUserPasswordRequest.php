@@ -2,18 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class UpdateUserRequest extends FormRequest
+class UpdateUserPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->isAdmin();
+        return true;
     }
 
     /**
@@ -24,10 +22,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email,' . $this->route('user')->id],
-            'role' => ['required', 'in:administrator,manager,employee'],
-            'is_active' => ['boolean'],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
         ];
     }
 }

@@ -4,15 +4,9 @@
         <p class="mt-1 text-sm text-gray-600">Ustaw nowe hasło dla pracownika.</p>
     </header>
 
-    <form method="post" action="{{ route('users.update', $user) }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('users.password.update', $user) }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
-
-        @if(!Auth::user()->isAdmin())
-            <input type="hidden" name="name" value="{{ $user->name }}">
-            <input type="hidden" name="email" value="{{ $user->email }}">
-            <input type="hidden" name="role" value="{{ $user->role }}">
-        @endif
 
         <div>
             <x-input-label for="password" value="Nowe hasło" />

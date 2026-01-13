@@ -8,5 +8,6 @@ Route::middleware(['auth', 'verified', 'can:manage-users'])->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::patch('/users/{user}/password', [UserController::class, 'updatePassword'])->name('users.password.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
